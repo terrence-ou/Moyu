@@ -1,0 +1,20 @@
+{
+  "name": "moyujs",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "A concise frontend framework, for learning purpose only",
+  "workspaces": [
+    "packages/runtime"
+  ],
+  "scripts": {
+    "serve:example": "npx http-server . -o ./examples/ -bg"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "frontend",
+    "framework"
+  ],
+  "author": "Tingsong Ou",
+  "license": "MIT"
+}
