@@ -1,2 +1,3 @@
-# Moyu
-A concise frontend framework
+# moyu
+
+A concise and mininal frontend framework, build for fun
