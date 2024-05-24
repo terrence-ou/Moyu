@@ -57,9 +57,3 @@ export function hFragment(vNodes) {
     children: mapTextNodes(withoutNulls(vNodes)),
   };
 }
-
-export function lipsum(n) {
-  const text =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.";
-  return hFragment(Array(n).fill(h("p", {}, [text])));
-}
