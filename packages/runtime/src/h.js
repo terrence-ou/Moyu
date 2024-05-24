@@ -23,4 +23,43 @@ export function h(tag, props = {}, children = []) {
   };
 }
 
-function mapTextNodes() {}
+/**
+ * Convert texts into Text Nodes
+ *
+ * @param {Array} children - The children (nodes)
+ * @returns {Array} - Children nodes with texts be converted to the text node
+ */
+function mapTextNodes(children) {
+  return children.map((child) =>
+    typeof child === "string" ? hString(child) : child
+  );
+}
+
+/**
+ * Convert a text into a text node
+ *
+ * @param {String} str - The text in the element
+ * @returns {Object} - Virtual DOM text node
+ */
+export function hString(str) {
+  return { type: DOM_TYPES.TEXT, value: str };
+}
+
+/**
+ * Convert a fragment into a fragment node
+ *
+ * @param {Array} vNodes
+ * @returns {Object} - Virtual DOM fragment node
+ */
+export function hFragment(vNodes) {
+  return {
+    type: DOM_TYPES.FRAGMENT,
+    children: mapTextNodes(withoutNulls(vNodes)),
+  };
+}
+
+export function lipsum(n) {
+  const text =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.";
+  return hFragment(Array(n).fill(h("p", {}, [text])));
+}
