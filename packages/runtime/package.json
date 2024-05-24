@@ -12,7 +12,8 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "js",
@@ -23,6 +24,7 @@
   "author": "Tingsong Ou",
   "license": "MIT",
   "devDependencies": {
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "jsdom": "^24.0.0",
     "rollup": "^4.18.0",

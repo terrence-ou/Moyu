@@ -1,4 +1,6 @@
 import { DOM_TYPES } from "./h";
+import { addEventListeners } from "./event";
+import { setAttributes } from "./attributes";
 
 /**
  * Mounte the virtual DOM to the real DOM.
@@ -33,17 +35,31 @@ export function mountDom(vdom, parentEl) {
  * @param {Object} vdom
  * @param {HTMLElement} parentEl
  */
-export function createTextNode(vdom, parentEl) {
+function createTextNode(vdom, parentEl) {
   const { value } = vdom;
   const textNode = document.createTextNode(value); // Create a text node with document API
   vdom.el = textNode; // This is a reference to the real DOM
   parentEl.append(textNode);
 }
 
-export function createElementNode(vdom, parentEl) {
+function createFragmentNode(vdom, parentEl) {
   const { children } = vdom;
   vdom.el = parentEl;
   children.forEach((child) => mountDom(child, parentEl));
 }
 
-export function createFragmentNode(vdom, parentEl) {}
+function createElementNode(vdom, parentEl) {
+  const { tag, props, children } = vdom;
+  const element = document.createElement(tag);
+
+  addProps(element, props, vdom);
+  children.forEach((child) => mountDom(child, element));
+  parentEl.append(element);
+}
+
+function addProps(el, props, vdom) {
+  const { on: events, ...attrs } = props;
+
+  vdom.listeners = addEventListeners(events, el); // Plural
+  setAttributes(el, attrs);
+}
