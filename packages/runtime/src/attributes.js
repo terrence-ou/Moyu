@@ -1,3 +1,9 @@
+/**
+ * Add attributes to the HTML element
+ *
+ * @param {HTMLElement} el the HTML to add attribute to
+ * @param {Object} attrs the attributes
+ */
 export function setAttributes(el, attrs) {
   const { class: className, style, ...otherAttrs } = attrs;
   if (className) setClass(el, className);

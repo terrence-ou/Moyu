@@ -9,10 +9,10 @@ export const DOM_TYPES = {
 /**
  * Creares a virtual DOM node with the given parameters; (h is short for hypertext)
  *
- * @param {string} tag - The type of the DOM node (e.g., 'div', 'span').
- * @param {Object} [props={}] - The properties of the DOM node.
- * @param {Array} [children=[]] - The children of the DOM nod.
- * @returns {Object} The virtual DOM node
+ * @param {string} tag - the type of the DOM node (e.g., 'div', 'span').
+ * @param {Object} [props={}] - the properties of the DOM node.
+ * @param {Array} [children=[]] - the children of the DOM nod.
+ * @returns {Object} the virtual DOM node
  */
 export function h(tag, props = {}, children = []) {
   return {
@@ -26,8 +26,8 @@ export function h(tag, props = {}, children = []) {
 /**
  * Convert texts into Text Nodes
  *
- * @param {Array} children - The children (nodes)
- * @returns {Array} - Children nodes with texts be converted to the text node
+ * @param {Array} children - the children (nodes)
+ * @returns {Array} - children nodes with texts be converted to the text node
  */
 function mapTextNodes(children) {
   return children.map((child) =>
@@ -38,8 +38,8 @@ function mapTextNodes(children) {
 /**
  * Convert a text into a text node
  *
- * @param {String} str - The text in the element
- * @returns {Object} - Virtual DOM text node
+ * @param {String} str - the text in the element
+ * @returns {Object} - virtual DOM text node
  */
 export function hString(str) {
   return { type: DOM_TYPES.TEXT, value: str };
@@ -48,8 +48,8 @@ export function hString(str) {
 /**
  * Convert a fragment into a fragment node
  *
- * @param {Array} vNodes
- * @returns {Object} - Virtual DOM fragment node
+ * @param {Array} vNodes - virtual DOM nodes
+ * @returns {Object} - virtual DOM fragment node
  */
 export function hFragment(vNodes) {
   return {
