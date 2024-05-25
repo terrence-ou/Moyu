@@ -1,15 +1,15 @@
 /**
  * Add event listeners to the event target el, and returns the added listeners
  *
- * @param {object} listeners
- * @param {EventTarget} el
+ * @param {object} listeners the event listeners
+ * @param {EventTarget} el the HTML element we attach the listeners to
  * @returns added event listeners
  */
 export function addEventListeners(listeners = {}, el) {
   const addedListeners = {};
   Object.entries(listeners).forEach(([eventName, handler]) => {
     const listener = addEventListener(eventName, handler, el);
-    addEventListener[eventName] = listener;
+    addedListeners[eventName] = listener;
   });
   return addedListeners;
 }
