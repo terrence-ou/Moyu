@@ -1,5 +1,5 @@
 import { h } from "./h";
-console.log("sting woring on the runtime...but I will be out soon!");
+import { mountDom } from "./mount-dom";
 
 function MessageComponent(level, message) {
   return h("div", { class: `message message--${level}` }, [
@@ -7,4 +7,4 @@ function MessageComponent(level, message) {
   ]);
 }
 
-console.log(MessageComponent("info", "This is an info message"));
+mountDom(MessageComponent("warning", "this is a warning"));
