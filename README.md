@@ -17,3 +17,4 @@ Objectives:
   - [ ] Testings
 
 - [ ] State Management
+  - [x] Dispatcher [(code)](./packages/runtime/src/dispatcher.js)

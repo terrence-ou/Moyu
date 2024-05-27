@@ -1,10 +1,12 @@
-import { h } from "./h";
-import { mountDom } from "./mount-dom";
+import { Dispatcher } from "./dispatcher";
 
-function MessageComponent(level, message) {
-  return h("div", { class: `message message--${level}` }, [
-    h("p", {}, [message]),
-  ]);
-}
+const dispatcher = new Dispatcher();
 
-mountDom(MessageComponent("warning", "this is a warning"));
+dispatcher.subscribe("greet", (name) => {
+  console.log(`Hello, ${name}!`);
+});
+dispatcher.afterEveryCommand(() => {
+  console.log("Done greeting!");
+});
+
+dispatcher.dispatch("greet", "John");
