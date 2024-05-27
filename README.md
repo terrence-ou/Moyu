@@ -4,7 +4,7 @@
 
 # moyu
 
-A concise and mininal JavaScript frontend UI framework, build for fun. Still in process...
+A mininal JavaScript frontend UI framework, build for fun. Still in process...
 
 Objectives:
 
