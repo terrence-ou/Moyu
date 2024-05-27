@@ -1,5 +1,5 @@
 import { DOM_TYPES } from "./h";
-import { addEventListeners } from "./event";
+import { addEventListeners } from "./events";
 import { setAttributes } from "./attributes";
 
 /**
@@ -44,7 +44,7 @@ function createTextNode(vdom, parentEl) {
 
 function createFragmentNode(vdom, parentEl) {
   const { children } = vdom;
-  vdom.el = parentEl;
+  vdom.el = parentEl; // This is a reference to the parent, be careful when handling it
   children.forEach((child) => mountDom(child, parentEl));
 }
 

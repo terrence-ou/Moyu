@@ -1,7 +1,7 @@
 /**
  * Add event listeners to the event target el, and returns the added listeners
  *
- * @param {object} listeners the event listeners
+ * @param {EventListener[]} listeners the event listeners
  * @param {EventTarget} el the HTML element we attach the listeners to
  * @returns added event listeners
  */
@@ -25,4 +25,16 @@ export function addEventListeners(listeners = {}, el) {
 export function addEventListener(eventName, handler, el) {
   el.addEventListener(eventName, handler);
   return handler;
+}
+
+/**
+ * Remove event listener from a given event target
+ *
+ * @param {EventListener[]} listeners the event listeners to be removed
+ * @param {EventTarget} el the element to remove event listeners from
+ */
+export function removeEventListeners(listeners = {}, el) {
+  Object.entries(listeners).forEach(([eventName, handler]) => {
+    el.removeEventListener(eventName, handler);
+  });
 }
