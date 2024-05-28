@@ -8,7 +8,7 @@ import { setAttributes } from "./attributes";
  * @param {Object} vdom the virtual DOM to mound
  * @param {HTMLElement} parentEl the parent HTML element to mount vDOM
  */
-export function mountDom(vdom, parentEl) {
+export function mountDOM(vdom, parentEl) {
   switch (vdom.type) {
     case DOM_TYPES.TEXT: {
       createTextNode(vdom, parentEl);
@@ -45,7 +45,7 @@ function createTextNode(vdom, parentEl) {
 function createFragmentNode(vdom, parentEl) {
   const { children } = vdom;
   vdom.el = parentEl; // This is a reference to the parent, be careful when handling it
-  children.forEach((child) => mountDom(child, parentEl));
+  children.forEach((child) => mountDOM(child, parentEl));
 }
 
 function createElementNode(vdom, parentEl) {
@@ -54,7 +54,7 @@ function createElementNode(vdom, parentEl) {
   addProps(element, props, vdom);
   vdom.el = element;
 
-  children.forEach((child) => mountDom(child, element));
+  children.forEach((child) => mountDOM(child, element));
   parentEl.append(element);
 }
 
