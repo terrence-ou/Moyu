@@ -6,6 +6,13 @@
 
 A mininal JavaScript frontend UI framework, build for fun. Still in process...
 
+A very BETA release: https://www.npmjs.com/package/@ou-terrence/moyu /
+
+Installation:
+```
+npm i @ou-terrence/moyu
+```
+
 Objectives:
 
 - [ ] Virtual DOM
@@ -18,4 +25,7 @@ Objectives:
 
 - [ ] State Management
   - [x] Dispatcher [(code)](./packages/runtime/src/dispatcher.js)
-  - [ ] CreateApp function
+  - [x] CreateApp function
+  - [ ] Documentations
+  - [ ] Testings
+
