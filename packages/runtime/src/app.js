@@ -9,7 +9,6 @@ import { Dispatcher } from "./dispatcher";
  */
 
 export function createApp({ state, view, reducers = {} }) {
-  // eslint-disable-next-line no-unused-vars
   let parentEl = null;
   let vdom = null;
 
@@ -34,7 +33,7 @@ export function createApp({ state, view, reducers = {} }) {
     }
 
     vdom = view(state, emit);
-    mountDOM(vdom);
+    mountDOM(vdom, parentEl);
   }
 
   return {
