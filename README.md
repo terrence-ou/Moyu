@@ -18,3 +18,4 @@ Objectives:
 
 - [ ] State Management
   - [x] Dispatcher [(code)](./packages/runtime/src/dispatcher.js)
+  - [ ] CreateApp function
