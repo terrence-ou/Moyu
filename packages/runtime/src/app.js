@@ -9,11 +9,16 @@ import { Dispatcher } from "./dispatcher";
  */
 
 export function createApp({ state, view, reducers = {} }) {
+  // eslint-disable-next-line no-unused-vars
   let parentEl = null;
   let vdom = null;
 
   const dispatcher = new Dispatcher();
   const subscriptions = [dispatcher.afterEveryCommand(renderApp)];
+
+  function emit(eventName, payload) {
+    dispatcher.dispatch(eventName, payload);
+  }
 
   for (const actionName in reducers) {
     const reducer = reducers[actionName];
@@ -28,7 +33,7 @@ export function createApp({ state, view, reducers = {} }) {
       destroyDOM(vdom);
     }
 
-    vdom = view(state);
+    vdom = view(state, emit);
     mountDOM(vdom);
   }
 
@@ -36,6 +41,12 @@ export function createApp({ state, view, reducers = {} }) {
     mount(_parentEl) {
       parentEl = _parentEl;
       renderApp();
+    },
+
+    unmount() {
+      destroyDOM(vdom);
+      vdom = null;
+      subscriptions.forEach((unsubscribe) => unsubscribe());
     },
   };
 }
