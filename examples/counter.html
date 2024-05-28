@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <script type="module">
+      import {
+        createApp,
+        h,
+        hString,
+        hFragment,
+      } from "https://unpkg.com/@ou-terrence/moyu";
+
+      const state = { count: 0 };
+      const reducers = {
+        add: (state) => ({ count: state.count + 1 }),
+        sub: (state) => ({ count: state.count - 1 }),
+      };
+      const View = (state, emit) => {
+        return hFragment([
+          h("div", { class: "counter__body" }, [
+            h("button", { on: { click: () => emit("sub") } }, ["-"]),
+            h("span", {}, [hString(state.count)]),
+            h("button", { on: { click: () => emit("add") } }, ["+"]),
+          ]),
+          h("code", {}, ["npm i @ou-terrence/moyu"]),
+          h("p", {}, ["version-0.0.1"]),
+        ]);
+      };
+      createApp({ state, view: View, reducers }).mount(document.body);
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+      body {
+        font-family: "Roboto", sans-serif;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button {
+        height: 3rem;
+        width: 3rem;
+        background-color: papayawhip;
+        outline: none;
+        border: none;
+        border-radius: 0.2rem;
+        font-size: larger;
+        transition-duration: 200ms;
+      }
+
+      button:hover {
+        cursor: pointer;
+        background-color: rgb(216, 112, 112);
+        color: papayawhip;
+      }
+
+      p {
+        margin-top: 0.5rem;
+        font-size: large;
+        font-weight: 300;
+      }
+
+      span {
+        font-size: larger;
+      }
+
+      code {
+        margin-top: 3rem;
+        font-size: larger;
+        padding: 0.75rem 1.5rem;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 0.25rem;
+      }
+
+      .counter__body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+    </style>
+    <title>Moyu Counter</title>
+  </head>
+  <body>
+    <div>
+      <img src="./icons/icon.png" height="350" />
+    </div>
+  </body>
+</html>
