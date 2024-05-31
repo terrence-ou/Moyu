@@ -29,3 +29,9 @@ Objectives:
   - [ ] Documentations
   - [ ] Testings
 
+- [ ] Reconciliation
+  - [ ] Documentation
+  - [ ] Testing
+
+- [ ] Examples
+  - [x] tictactoe @0.0.1
