@@ -6,7 +6,7 @@
 
 A mininal JavaScript frontend UI framework, build for fun. Still in process...
 
-A very BETA release: https://www.npmjs.com/package/@ou-terrence/moyu /
+A very BETA release: https://www.npmjs.com/package/@ou-terrence/moyu <br/>
 
 Installation:
 ```
@@ -17,21 +17,23 @@ Objectives:
 
 - [ ] Virtual DOM
 
-  - [x] vDOM object [(code)](./packages/runtime/src/h.js)
-  - [x] Mount vDOM [(code)](./packages/runtime/src/mount-dom.js)
-  - [x] Destroy DOM [(code)](./packages/runtime/src/destroy-dom.js)
+  - [x] vDOM object [h.js](./packages/runtime/src/h.js)
+  - [x] Mount vDOM [mount-dom.js](./packages/runtime/src/mount-dom.js)
+  - [x] Destroy DOM [destroy-dom.js](./packages/runtime/src/destroy-dom.js)
   - [ ] Documentations
   - [ ] Testings
 
 - [ ] State Management
-  - [x] Dispatcher [(code)](./packages/runtime/src/dispatcher.js)
+  - [x] Dispatcher [dispatcher.js](./packages/runtime/src/dispatcher.js)
   - [x] CreateApp function
   - [ ] Documentations
   - [ ] Testings
 
 - [ ] Reconciliation
+  - [x] Array difference detection and modification sequence generation [array.js](./packages/runtime/src/utils/array.js)
+  - [x] Object difference detection [objects.js](./packages/runtime/src/utils/objects.js)
   - [ ] Documentation
-  - [ ] Testing
+  - [ ] Testing [__tests__](./packages/runtime/src/__tests__/)
 
 - [ ] Examples
   - [x] tictactoe @0.0.1
