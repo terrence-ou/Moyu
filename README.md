@@ -30,7 +30,7 @@ Objectives:
   - [ ] Testings
 
 - [ ] Reconciliation
-  - [x] Array difference detection and modification sequence generation [arrays.js](./packages/runtime/src/utils/array.js)
+  - [x] Array difference detection and modification sequence generation [arrays.js](./packages/runtime/src/utils/arrays.js)
   - [x] Object difference detection [objects.js](./packages/runtime/src/utils/objects.js)
   - [ ] Documentation
   - [ ] Testing [__tests__](./packages/runtime/src/__tests__/)
