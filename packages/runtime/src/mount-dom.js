@@ -8,18 +8,18 @@ import { setAttributes } from "./attributes";
  * @param {Object} vdom the virtual DOM to mound
  * @param {HTMLElement} parentEl the parent HTML element to mount vDOM
  */
-export function mountDOM(vdom, parentEl) {
+export function mountDOM(vdom, parentEl, index) {
   switch (vdom.type) {
     case DOM_TYPES.TEXT: {
-      createTextNode(vdom, parentEl);
+      createTextNode(vdom, parentEl, index);
       break;
     }
     case DOM_TYPES.ELEMENT: {
-      createElementNode(vdom, parentEl);
+      createElementNode(vdom, parentEl, index);
       break;
     }
     case DOM_TYPES.FRAGMENT: {
-      createFragmentNode(vdom, parentEl);
+      createFragmentNode(vdom, parentEl, index);
       break;
     }
     default: {
@@ -28,34 +28,54 @@ export function mountDOM(vdom, parentEl) {
   }
 }
 
+// insert an html node to the parent node
+function insert(el, parentEl, index) {
+  // If the index is null or undefined, just append
+  if (index === null || index === undefined) {
+    parentEl.append(el);
+    return;
+  }
+  if (index < 0) {
+    throw new Error(`Index must be a positive integer, got ${index}`);
+  }
+  const children = parentEl.childNodes;
+  if (index >= children.length) parentEl.append(el);
+  else parentEl.insertBefore(el, children[index]);
+}
+
 /**
  * Mount an text vDOM to DOM with document API
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/createTextNode}
  * @param {Object} vdom
  * @param {HTMLElement} parentEl
+ * @param {Number} index the position the item should insert to the parentEl's children array
  */
-function createTextNode(vdom, parentEl) {
+function createTextNode(vdom, parentEl, index) {
   const { value } = vdom;
   const textNode = document.createTextNode(value); // Create a text node with document API
   vdom.el = textNode; // This is a reference to the real DOM
-  parentEl.append(textNode);
+  // parentEl.append(textNode);
+  insert(textNode, parentEl, index);
 }
 
-function createFragmentNode(vdom, parentEl) {
+function createFragmentNode(vdom, parentEl, index) {
   const { children } = vdom;
   vdom.el = parentEl; // This is a reference to the parent, be careful when handling it
-  children.forEach((child) => mountDOM(child, parentEl));
+  children.forEach((child, i) =>
+    mountDOM(child, parentEl, index ? index + i : null),
+  );
 }
 
-function createElementNode(vdom, parentEl) {
+function createElementNode(vdom, parentEl, index) {
   const { tag, props, children } = vdom;
   const element = document.createElement(tag);
   addProps(element, props, vdom);
   vdom.el = element;
 
   children.forEach((child) => mountDOM(child, element));
-  parentEl.append(element);
+  // parentEl.append(element);
+  insert(element, parentEl, index);
 }
 
 function addProps(el, props, vdom) {
