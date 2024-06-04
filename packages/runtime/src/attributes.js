@@ -28,7 +28,7 @@ function setClass(el, className) {
   }
 }
 
-function setAttribute(el, name, value) {
+export function setAttribute(el, name, value) {
   if (value === null || value === undefined) {
     removeAttribute(el, name);
   } else if (name.startsWith("data-")) {
