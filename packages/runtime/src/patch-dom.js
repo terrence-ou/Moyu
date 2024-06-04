@@ -7,10 +7,11 @@ import {
   setStyle,
   removeStyle,
 } from "./attributes";
+import { addEventListener } from "./events";
 import { objectsDiff } from "./utils/objects";
-import { arraysDiff } from "./utils/arrays";
+import { arraysDiff, arraysDiffSequence, ARRAY_DIFF_OP } from "./utils/arrays";
 import { isNotBlankOrEmptyString } from "./utils/strings";
-import { DOM_TYPES } from "./h";
+import { DOM_TYPES, extractChildren } from "./h";
 
 export function patchDOM(oldVdom, newVdom, parentEl) {
   if (!areNodesEqual(oldVdom, newVdom)) {
@@ -29,9 +30,13 @@ export function patchDOM(oldVdom, newVdom, parentEl) {
     }
     case DOM_TYPES.ELEMENT: {
       patchElement(oldVdom, newVdom);
-      return newVdom;
+      break;
     }
   }
+
+  patchChildren(oldVdom, newVdom);
+
+  return newVdom;
 }
 
 function findIndexInParent(parentEl, el) {
@@ -96,8 +101,53 @@ function patchStyles(el, oldStyle = {}, newStyle = {}) {
     setStyle(el, style, newStyle[style]);
 }
 
-// TODO: patchEvents()
-function patchEvents() {}
+function patchEvents(el, oldListeners = {}, oldEvents = {}, newEvents = {}) {
+  const { removed, added, updated } = objectsDiff(oldEvents, newEvents);
+  for (const eventName of removed.concat(updated)) {
+    el.removeEventListener(eventName, oldListeners[eventName]);
+  }
+  const addedListeners = {};
+  for (const eventName of added.concat(updated)) {
+    const listener = addEventListener(eventName, newEvents[eventName], el);
+    addedListeners[eventName] = listener;
+  }
+  return addedListeners;
+}
+
+function patchChildren(oldVdom, newVdom) {
+  const oldChildren = extractChildren(oldVdom);
+  const newChildren = extractChildren(newVdom);
+  const parentEl = oldVdom.el;
+
+  const diffSeq = arraysDiffSequence(oldChildren, newChildren, areNodesEqual);
+  for (const operation of diffSeq) {
+    const { originalIndex, index, item } = operation; // should be modified later
+    switch (operation.op) {
+      case ARRAY_DIFF_OP.ADD: {
+        mountDOM(item, parentEl, index);
+        break;
+      }
+      case ARRAY_DIFF_OP.REMOVE: {
+        destroyDOM(item);
+        break;
+      }
+      case ARRAY_DIFF_OP.MOVE: {
+        const oldChild = oldChildren[originalIndex];
+        const newChild = newChildren[index];
+        const el = oldChild.el;
+        const elAtTargetIndex = parentEl.childNodes[index];
+        parentEl.insertBefore(el, elAtTargetIndex); // Browser will automatically move the node to it's current pos
+
+        patchDOM(oldChild, newChild, parentEl); // handling changes of attributes
+        break;
+      }
+      case ARRAY_DIFF_OP.NOOP: {
+        patchDOM(oldChildren[originalIndex], newChildren[index], parentEl);
+        break;
+      }
+    }
+  }
+}
 
 function toClassList(classes = "") {
   return Array.isArray(classes)
