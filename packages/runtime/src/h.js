@@ -30,9 +30,9 @@ export function h(tag, props = {}, children = []) {
  * @returns {Array} - children nodes with texts be converted to the text node
  */
 function mapTextNodes(children) {
-  return children.map((child) =>
-    typeof child === "string" ? hString(child) : child
-  );
+  return children.map((child) => {
+    return typeof child === "string" ? hString(child) : child;
+  });
 }
 
 /**
@@ -56,4 +56,17 @@ export function hFragment(vNodes) {
     type: DOM_TYPES.FRAGMENT,
     children: mapTextNodes(withoutNulls(vNodes)),
   };
+}
+
+export function extractChildren(vdom) {
+  if (vdom.children === null || vdom.children === undefined) return [];
+  const children = [];
+  for (const child of vdom.children) {
+    if (child.type === DOM_TYPES.FRAGMENT) {
+      children.push(...extractChildren(child, children)); // This could potentially a typo, because the function only takes in one argument
+    } else {
+      children.push(child);
+    }
+  }
+  return children;
 }
