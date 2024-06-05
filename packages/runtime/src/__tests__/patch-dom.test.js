@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mountDOM } from "../mount-dom";
 import { patchDOM } from "../patch-dom";
 import { h, hFragment, hString } from "../h";
@@ -11,7 +11,7 @@ function patch(oldVdom, newVdom, hostComponent = null) {
   mountDOM(oldVdom, document.body);
   return patchDOM(oldVdom, newVdom, document.body, hostComponent);
 }
-
+// TEST - Element mount and unmount
 describe("Testing patching a single element", () => {
   it("identical vdoms", () => {
     const oldVdom = h("div", {}, ["hello"]);
@@ -52,6 +52,7 @@ describe("Testing patching a single element", () => {
   });
 });
 
+// TEST - fragment elements
 describe("Testing patching fragments", () => {
   it("adding a child to the fragment", () => {
     const oldVdom = hFragment([hFragment([hString("foo")])]);
@@ -107,6 +108,7 @@ describe("Testing patching fragments", () => {
   });
 });
 
+// TEST - attribute updates
 describe("Testing patching attributes", () => {
   it("attribute-adding", () => {
     const oldVdom = h("div", {}, []);
@@ -138,6 +140,7 @@ describe("Testing patching attributes", () => {
   });
 });
 
+// TEST class updates
 describe("Testing patching class(es)", () => {
   it("adding classes", () => {
     const oldVdom = h("div", { class: ["a", "b"] }, []);
@@ -185,5 +188,107 @@ describe("Testing patching class(es)", () => {
     patch(oldVdom, newVdom);
     const divEl = document.querySelector("div");
     expect(Array.from(divEl.classList)).toEqual(["a"]);
+  });
+});
+
+// TEST - style updates
+describe("Tesing style-patching", () => {
+  it("adding a new style", () => {
+    const oldVdom = h("div", { style: { color: "red" } });
+    const newVdom = h("div", { style: { color: "red", display: "flex" } });
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe(
+      '<div style="color: red; display: flex;"></div>',
+    );
+  });
+
+  it("adding multiple styles", () => {
+    const oldVdom = h("div", {});
+    const newVdom = h("div", { style: { color: "red", display: "flex" } });
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe(
+      '<div style="color: red; display: flex;"></div>',
+    );
+  });
+
+  it("removing a style", () => {
+    const oldVdom = h("div", { style: { color: "red", display: "flex" } });
+    const newVdom = h("div", { style: { color: "red" } });
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe('<div style="color: red;"></div>');
+  });
+
+  it("removing all of the styles", () => {
+    const oldVdom = h("div", { style: { color: "red", display: "flex" } });
+    const newVdom = h("div", {});
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe('<div style=""></div>');
+  });
+});
+
+// TEST - Event handler updates
+describe("Testing patching event handlers", () => {
+  it("adding an event handler", () => {
+    const newHandler = vi.fn();
+    const oldVdom = h("button", {}, ["Click Me"]);
+    const newVdom = h("button", { on: { click: newHandler } }, ["Click Me"]);
+    patch(oldVdom, newVdom);
+    // click the button twice
+    document.body.querySelector("button").click();
+    document.body.querySelector("button").click();
+    expect(newVdom.listeners).not.toBeUndefined();
+    expect(newHandler).toHaveBeenCalledTimes(2);
+  });
+
+  it("updating an event handler", () => {
+    const [oldHandler, newHandler] = [vi.fn(), vi.fn()];
+    const oldVdom = h("button", { on: { click: oldHandler } }, ["Click Me"]);
+    const newVdom = h("button", { on: { click: newHandler } }, ["Click Me"]);
+    patch(oldVdom, newVdom);
+    document.body.querySelector("button").click();
+    expect(oldHandler).not.toHaveBeenCalled();
+    expect(newVdom.listeners).not.toBeUndefined();
+    expect(newHandler).toHaveBeenCalledOnce();
+  });
+
+  it("removing an event handler", () => {
+    const oldHandler = vi.fn();
+    const oldVdom = h("button", { on: { click: oldHandler } }, ["Click Me"]);
+    const newVdom = h("button", {}, ["Click Me"]);
+    patch(oldVdom, newVdom);
+    document.body.querySelector("button").click();
+    expect(oldHandler).not.toHaveBeenCalled();
+    expect(newVdom.listeners).toStrictEqual({});
+  });
+});
+
+// TEST - Children elements patching
+describe("Testing patching children", () => {
+  it("appending children to the end", () => {
+    const oldVdom = h("div", {}, ["A"]);
+    const newVdom = h("div", {}, ["A", "B", "C"]);
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe("<div>ABC</div>");
+  });
+
+  it("inserting children at the beginning", () => {
+    const oldVdom = h("div", {}, ["A"]);
+    const newVdom = h("div", {}, ["B", "C", "A"]);
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe("<div>BCA</div>");
+  });
+
+  it("inserting children in the middle", () => {
+    const oldVdom = h("div", {}, ["A", "C"]);
+    const newVdom = h("div", {}, ["A", "B", "C"]);
+    patch(oldVdom, newVdom);
+    const divEl = document.body;
+    expect(divEl.innerHTML).toBe("<div>ABC</div>");
   });
 });
