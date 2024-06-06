@@ -98,7 +98,7 @@ class ArrayWithOriginalIndices {
       op: ARRAY_DIFF_OP.MOVE,
       originalIndex: this.originalIndexAt(fromIndex),
       from: fromIndex,
-      to: toIndex,
+      index: toIndex,
       item: this.#array[fromIndex],
     };
     // swap items' positions
