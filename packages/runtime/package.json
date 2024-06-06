@@ -1,11 +1,9 @@
 {
-  "name": "@ou-terrence/moyu",
-  "version": "0.0.1",
+  "name": "@moyujs/moyu",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/moyu.js",
-  "files": [
-    "dist/moyu.js"
-  ],
+  "files": ["dist/moyu.js"],
   "scripts": {
     "prepack": "npm run build",
     "build": "rollup -c",
@@ -15,12 +13,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
-  "keywords": [
-    "js",
-    "javascript",
-    "frontend",
-    "framework"
-  ],
+  "keywords": ["js", "javascript", "frontend", "framework"],
   "author": "Tingsong Ou",
   "license": "MIT",
   "devDependencies": {
