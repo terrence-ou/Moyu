@@ -10,7 +10,7 @@ A very BETA release: https://www.npmjs.com/package/@ou-terrence/moyu <br/>
 
 Installation:
 ```
-npm i @ou-terrence/moyu
+npm i @moyujs/moyu
 ```
 
 Objectives:
@@ -32,8 +32,9 @@ Objectives:
 - [ ] Reconciliation
   - [x] Array difference detection and modification sequence generation [arrays.js](./packages/runtime/src/utils/arrays.js)
   - [x] Object difference detection [objects.js](./packages/runtime/src/utils/objects.js)
+  - [x] DOM patching [patch-dom.js](./packages/runtime/src/patch-dom.js)
   - [ ] Documentation
   - [ ] Testing [__tests__](./packages/runtime/src/__tests__/)
 
 - [ ] Examples
-  - [x] tictactoe @0.0.1
+  - [x] tictactoe @0.0.2
