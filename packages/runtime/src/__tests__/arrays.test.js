@@ -90,7 +90,7 @@ describe("Testing arraysDiffSequence function", () => {
     const newArr = [1, 0];
     const sequence = arraysDiffSequence(oldArr, newArr);
     const expectedSeq = [
-      { op: ARRAY_DIFF_OP.MOVE, originalIndex: 1, from: 1, to: 0, item: 1 },
+      { op: ARRAY_DIFF_OP.MOVE, originalIndex: 1, from: 1, index: 0, item: 1 },
       { op: ARRAY_DIFF_OP.NOOP, originalIndex: 0, index: 1, item: 0 },
     ];
     expect(sequence).toEqual(expectedSeq);

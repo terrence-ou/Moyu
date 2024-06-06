@@ -138,6 +138,14 @@ describe("Testing patching attributes", () => {
     const divEl = document.querySelector("div");
     expect(divEl.getAttribute("data-val")).toBe("789987");
   });
+
+  it("attribute removal", () => {
+    const oldVdom = h("div", { "data-val": "123321" }, []);
+    const newVdom = h("div", {}, []);
+    patch(oldVdom, newVdom);
+    const divEl = document.querySelector("div");
+    expect(divEl.getAttribute("data-val")).toBeUndefined;
+  });
 });
 
 // TEST class updates
@@ -197,8 +205,8 @@ describe("Tesing style-patching", () => {
     const oldVdom = h("div", { style: { color: "red" } });
     const newVdom = h("div", { style: { color: "red", display: "flex" } });
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe(
+    const body = document.body;
+    expect(body.innerHTML).toBe(
       '<div style="color: red; display: flex;"></div>',
     );
   });
@@ -207,8 +215,8 @@ describe("Tesing style-patching", () => {
     const oldVdom = h("div", {});
     const newVdom = h("div", { style: { color: "red", display: "flex" } });
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe(
+    const body = document.body;
+    expect(body.innerHTML).toBe(
       '<div style="color: red; display: flex;"></div>',
     );
   });
@@ -217,16 +225,16 @@ describe("Tesing style-patching", () => {
     const oldVdom = h("div", { style: { color: "red", display: "flex" } });
     const newVdom = h("div", { style: { color: "red" } });
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe('<div style="color: red;"></div>');
+    const body = document.body;
+    expect(body.innerHTML).toBe('<div style="color: red;"></div>');
   });
 
   it("removing all of the styles", () => {
     const oldVdom = h("div", { style: { color: "red", display: "flex" } });
     const newVdom = h("div", {});
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe('<div style=""></div>');
+    const body = document.body;
+    expect(body.innerHTML).toBe('<div style=""></div>');
   });
 });
 
@@ -267,28 +275,123 @@ describe("Testing patching event handlers", () => {
 });
 
 // TEST - Children elements patching
-describe("Testing patching children", () => {
+describe("Testing patching textnode children", () => {
   it("appending children to the end", () => {
     const oldVdom = h("div", {}, ["A"]);
     const newVdom = h("div", {}, ["A", "B", "C"]);
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe("<div>ABC</div>");
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>ABC</div>");
   });
 
   it("inserting children at the beginning", () => {
     const oldVdom = h("div", {}, ["A"]);
     const newVdom = h("div", {}, ["B", "C", "A"]);
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe("<div>BCA</div>");
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>BCA</div>");
   });
 
   it("inserting children in the middle", () => {
     const oldVdom = h("div", {}, ["A", "C"]);
     const newVdom = h("div", {}, ["A", "B", "C"]);
     patch(oldVdom, newVdom);
-    const divEl = document.body;
-    expect(divEl.innerHTML).toBe("<div>ABC</div>");
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>ABC</div>");
+  });
+
+  it("removing children from the beginning", () => {
+    const oldVdom = h("div", {}, ["A", "B", "C"]);
+    const newVdom = h("div", {}, ["C"]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>C</div>");
+  });
+
+  it("removing children from the end", () => {
+    const oldVdom = h("div", {}, ["A", "B", "C", "D", "E"]);
+    const newVdom = h("div", {}, ["A", "B"]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>AB</div>");
+  });
+
+  it("removing children from the middle", () => {
+    const oldVdom = h("div", {}, ["A", "B", "C", "D", "E"]);
+    const newVdom = h("div", {}, ["A", "E"]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>AE</div>");
+  });
+
+  it("changing values", () => {
+    const oldVdom = h("div", {}, ["A", "B", "C"]);
+    const newVdom = h("div", {}, ["D", "E", "F"]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe("<div>DEF</div>");
+  });
+});
+
+describe("Testing patching element children", () => {
+  it("adding node at the beginning", () => {
+    const oldVdom = h("div", {}, [h("span", {}, ["B"])]);
+    const newVdom = h("div", {}, [
+      h("span", { id: "a" }, ["A"]),
+      h("span", {}, ["B"]),
+    ]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe(
+      '<div><span id="a">A</span><span>B</span></div>',
+    );
+  });
+
+  it("adding node at the end", () => {
+    const oldVdom = h("div", {}, [h("span", {}, ["B"])]);
+    const newVdom = h("div", {}, [
+      h("span", {}, ["B"]),
+      h("span", { id: "a" }, ["A"]),
+    ]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe(
+      '<div><span>B</span><span id="a">A</span></div>',
+    );
+  });
+
+  it("adding node in the middle", () => {
+    const oldVdom = h("div", {}, [
+      h("span", {}, ["B"]),
+      h("span", { id: "a" }, ["A"]),
+    ]);
+    const newVdom = h("div", {}, [
+      h("span", {}, ["B"]),
+      h("span", { id: "d" }, ["D"]),
+      h("span", { id: "a" }, ["A"]),
+    ]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe(
+      '<div><span>B</span><span id="d">D</span><span id="a">A</span></div>',
+    );
+  });
+
+  it("moving nodes around", () => {
+    const oldVdom = h("div", {}, [
+      h("span", {}, ["A"]),
+      h("p", {}, ["paragraph"]),
+      h("button", {}, ["click"]),
+    ]);
+    const newVdom = h("div", {}, [
+      h("button", {}, ["click"]),
+      h("span", {}, ["A"]),
+      h("p", {}, ["paragraph"]),
+    ]);
+    patch(oldVdom, newVdom);
+    const body = document.body;
+    expect(body.innerHTML).toBe(
+      "<div><button>click</button><span>A</span><p>paragraph</p></div>",
+    );
   });
 });
