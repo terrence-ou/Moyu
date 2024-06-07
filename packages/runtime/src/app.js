@@ -30,13 +30,7 @@ export function createApp({ state, view, reducers = {} }) {
   }
 
   function renderApp() {
-    // if (vdom) {
-    //   destroyDOM(vdom);
-    // }
-
     const newVdom = view(state, emit);
-    // vdom = view(state, emit);
-    // mountDOM(vdom, parentEl);
     vdom = patchDOM(vdom, newVdom, parentEl);
   }
 
@@ -46,7 +40,6 @@ export function createApp({ state, view, reducers = {} }) {
         throw new Error("The application is already mounted");
       }
       parentEl = _parentEl;
-      // renderApp();
       vdom = view(state, emit);
       mountDOM(vdom, parentEl);
 
