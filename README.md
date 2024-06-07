@@ -34,7 +34,10 @@ Objectives:
   - [x] Object difference detection [objects.js](./packages/runtime/src/utils/objects.js)
   - [x] DOM patching [patch-dom.js](./packages/runtime/src/patch-dom.js)
   - [ ] Documentation
-  - [ ] Testing [__tests__](./packages/runtime/src/__tests__/)
+  - [x] Testing [__tests__](./packages/runtime/src/__tests__/)
+
+- [ ] Stateful Component
+  - [ ] Components definition [component.js](./packages/runtime/src/component.js)
 
 - [ ] Examples
   - [x] tictactoe @0.0.2
