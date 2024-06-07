@@ -63,7 +63,7 @@ export function extractChildren(vdom) {
   const children = [];
   for (const child of vdom.children) {
     if (child.type === DOM_TYPES.FRAGMENT) {
-      children.push(...extractChildren(child, children)); // This could potentially a typo, because the function only takes in one argument
+      children.push(...extractChildren(child));
     } else {
       children.push(child);
     }
