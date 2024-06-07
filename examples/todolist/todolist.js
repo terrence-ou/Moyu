@@ -2,7 +2,7 @@ import {
   createApp,
   h,
   hFragment,
-} from "https://unpkg.com/@ou-terrence/moyu@0.0.1";
+} from "https://unpkg.com/@moyujs/moyu@0.0.2";
 
 const state = {
   currentTodo: "",

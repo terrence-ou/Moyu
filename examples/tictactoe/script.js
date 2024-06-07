@@ -2,7 +2,7 @@ import {
   createApp,
   h,
   hFragment,
-} from "https://unpkg.com/@ou-terrence/moyu@0.0.1";
+} from "https://unpkg.com/@moyujs/moyu@0.0.2";
 
 const combinations = [
   [0, 1, 2],
@@ -54,11 +54,11 @@ function App(state, emit) {
     state.winner === undefined
       ? `Turn ${state.turn}`
       : state.winner === "tie"
-        ? "Game end. It is a tie."
-        : `Game end, ${state.winner} is the winner!`;
+        ? "Game ends. It is a tie."
+        : `Game ends, ${state.winner} is the winner!`;
 
   return hFragment([
-    h("h1", {}, ["Moyu Tic Tac Toe"]),
+    h("h1", {}, ["moyujs tic-tac-toe"]),
     h("p", {}, [currStateText]),
     makeBoard(state, emit),
   ]);
