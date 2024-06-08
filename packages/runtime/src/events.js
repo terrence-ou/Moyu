@@ -29,7 +29,7 @@ export function addEventListener(eventName, handler, el, hostComponent = null) {
       : handler(...arguments);
   }
   el.addEventListener(eventName, boundHandler);
-  return boundHandler();
+  return boundHandler;
 }
 
 /**
