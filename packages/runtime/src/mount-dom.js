@@ -8,18 +8,18 @@ import { setAttributes } from "./attributes";
  * @param {Object} vdom the virtual DOM to mound
  * @param {HTMLElement} parentEl the parent HTML element to mount vDOM
  */
-export function mountDOM(vdom, parentEl, index) {
+export function mountDOM(vdom, parentEl, index, hostComponent = null) {
   switch (vdom.type) {
     case DOM_TYPES.TEXT: {
       createTextNode(vdom, parentEl, index);
       break;
     }
     case DOM_TYPES.ELEMENT: {
-      createElementNode(vdom, parentEl, index);
+      createElementNode(vdom, parentEl, index, hostComponent);
       break;
     }
     case DOM_TYPES.FRAGMENT: {
-      createFragmentNode(vdom, parentEl, index);
+      createFragmentNode(vdom, parentEl, index, hostComponent);
       break;
     }
     default: {
@@ -59,28 +59,26 @@ function createTextNode(vdom, parentEl, index) {
   insert(textNode, parentEl, index);
 }
 
-function createFragmentNode(vdom, parentEl, index) {
+function createFragmentNode(vdom, parentEl, index, hostComponent) {
   const { children } = vdom;
   vdom.el = parentEl; // This is a reference to the parent, be careful when handling it
   children.forEach((child, i) =>
-    mountDOM(child, parentEl, index ? index + i : null),
+    mountDOM(child, parentEl, index ? index + i : null, hostComponent),
   );
 }
 
-function createElementNode(vdom, parentEl, index) {
+function createElementNode(vdom, parentEl, index, hostComponent) {
   const { tag, props, children } = vdom;
   const element = document.createElement(tag);
-  addProps(element, props, vdom);
+  addProps(element, props, vdom, hostComponent);
   vdom.el = element;
 
-  children.forEach((child) => mountDOM(child, element));
-  // parentEl.append(element);
+  children.forEach((child) => mountDOM(child, element, null, hostComponent));
   insert(element, parentEl, index);
 }
 
-function addProps(el, props, vdom) {
+function addProps(el, props, vdom, hostComponent) {
   const { on: events, ...attrs } = props;
-
-  vdom.listeners = addEventListeners(events, el); // Plural
+  vdom.listeners = addEventListeners(events, el, hostComponent);
   setAttributes(el, attrs);
 }

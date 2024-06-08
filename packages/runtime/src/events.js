@@ -5,10 +5,10 @@
  * @param {EventTarget} el the HTML element we attach the listeners to
  * @returns added event listeners
  */
-export function addEventListeners(listeners = {}, el) {
+export function addEventListeners(listeners = {}, el, hostComponent = null) {
   const addedListeners = {};
   Object.entries(listeners).forEach(([eventName, handler]) => {
-    const listener = addEventListener(eventName, handler, el);
+    const listener = addEventListener(eventName, handler, el, hostComponent);
     addedListeners[eventName] = listener;
   });
   return addedListeners;
@@ -22,9 +22,14 @@ export function addEventListeners(listeners = {}, el) {
  * @param {EventTarget} el the element to add event listener to
  * @returns the event handler
  */
-export function addEventListener(eventName, handler, el) {
-  el.addEventListener(eventName, handler);
-  return handler;
+export function addEventListener(eventName, handler, el, hostComponent = null) {
+  function boundHandler() {
+    hostComponent
+      ? handler.apply(hostComponent, arguments)
+      : handler(...arguments);
+  }
+  el.addEventListener(eventName, boundHandler);
+  return boundHandler();
 }
 
 /**
