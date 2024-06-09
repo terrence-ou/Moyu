@@ -124,12 +124,49 @@ export function withoutNulls(arr) {
   return arr.filter((item) => item !== null && item !== undefined);
 }
 
-// This function cannot handle duplicated items. Will modify in the future
-export function arraysDiff(oldArray, newArray) {
+export function makeCountMap(array) {
+  const map = new Map();
+  for (const item of array) {
+    map.set(item, (map.get(item) || 0) + 1);
+  }
+  return map;
+}
+
+function mapsDiff(oldMap, newMap) {
+  const oldKeys = Array.from(oldMap.keys());
+  const newKeys = Array.from(newMap.keys());
   return {
-    added: newArray.filter((newItem) => !oldArray.includes(newItem)),
-    removed: oldArray.filter((oldItem) => !newArray.includes(oldItem)),
+    added: newKeys.filter((key) => !oldMap.has(key)),
+    removed: oldKeys.filter((key) => !newMap.has(key)),
+    updated: newKeys.filter(
+      (key) => oldMap.has(key) && oldMap.get(key) !== newMap.get(key),
+    ),
   };
+}
+
+// This function cannot handle duplicated items. Will modify in the future
+
+export function arraysDiff(oldArray, newArray) {
+  const oldsCount = makeCountMap(oldArray);
+  const newsCount = makeCountMap(newArray);
+  const diff = mapsDiff(oldsCount, newsCount);
+
+  const added = diff.added.flatMap((key) =>
+    Array(newsCount.get(key)).fill(key),
+  );
+  const removed = diff.removed.flatMap((key) =>
+    Array(oldsCount.get(key)).fill(key),
+  );
+
+  for (const key of diff.updated) {
+    const oldCount = oldsCount.get(key);
+    const newCount = newsCount.get(key);
+    const diffCount = newCount - oldCount; // Carefull here!
+    if (diffCount > 0) added.push(...Array(diffCount).fill(key));
+    else removed.push(...Array(-diffCount).fill(key));
+  }
+
+  return { added, removed };
 }
 
 export function arraysDiffSequence(

@@ -3,6 +3,7 @@ import {
   withoutNulls,
   arraysDiff,
   arraysDiffSequence,
+  makeCountMap,
   ARRAY_DIFF_OP,
 } from "../utils/arrays";
 
@@ -29,29 +30,65 @@ describe("Testing withoutNulls funtion", () => {
   });
 });
 
+// In the arraysDiff function, the output sequence is not impotant
 describe("Testing arraysDiff function", () => {
-  // Will solve this problem in the future
-  // it("array items removed", () => {
-  //   const oldArr = [1, 1, 2, 2, 3, 4, 5];
-  //   const newArr = [1, 2, 3, 4, 5];
-  //   const { added, removed } = arraysDiff(oldArr, newArr);
-  //   expect(added).toEqual([]);
-  //   expect(removed).toEqual([1, 2]);
-  // });
-  it("new items added to the array", () => {
-    const oldArr = [1, 2, 3, 4];
-    const newArr = [0, 1, 2, 3, 4, 5];
-    const { added, removed } = arraysDiff(oldArr, newArr);
-    expect(added).toEqual([0, 5]);
-    expect(removed).toEqual([]);
+  // Sequence is not important
+  it("array items removed", () => {
+    let oldArr = [1, 1, 2, 2, 3, 4, 5];
+    let newArr = [1, 2, 3, 4, 5];
+    let diff = arraysDiff(oldArr, newArr);
+    expect(makeCountMap(diff.added)).toEqual(new Map([]));
+    expect(makeCountMap(diff.removed)).toEqual(
+      new Map([
+        [1, 1],
+        [2, 1],
+      ]),
+    );
+
+    oldArr = [1, 1, 2, 2, 1, 4, 3, 4, 5, 1, 1, 5, 7, 8, 9];
+    newArr = [1, 2, 3, 4];
+    diff = arraysDiff(oldArr, newArr);
+    expect(makeCountMap(diff.added)).toEqual(new Map([]));
+    expect(makeCountMap(diff.removed)).toEqual(
+      new Map([
+        [1, 4],
+        [2, 1],
+        [4, 1],
+        [5, 2],
+        [7, 1],
+        [8, 1],
+        [9, 1],
+      ]),
+    );
   });
 
-  it("items removed from the old arr", () => {
-    const oldArr = [0, 1, 2, 3, 4, 5];
-    const newArr = [1, 2, 3, 4];
-    const { added, removed } = arraysDiff(oldArr, newArr);
-    expect(added).toEqual([]);
-    expect(removed).toEqual([0, 5]);
+  it("new items added to the array", () => {
+    let oldArr = [1, 2, 3, 4, 5];
+    let newArr = [1, 1, 2, 2, 3, 4, 5];
+    let diff = arraysDiff(oldArr, newArr);
+    expect(makeCountMap(diff.removed)).toEqual(new Map([]));
+    expect(makeCountMap(diff.added)).toEqual(
+      new Map([
+        [1, 1],
+        [2, 1],
+      ]),
+    );
+
+    oldArr = [1, 2, 3, 4];
+    newArr = [1, 1, 2, 2, 1, 4, 3, 4, 5, 1, 1, 5, 7, 8, 9];
+    diff = arraysDiff(oldArr, newArr);
+    expect(makeCountMap(diff.added)).toEqual(
+      new Map([
+        [1, 4],
+        [2, 1],
+        [4, 1],
+        [5, 2],
+        [7, 1],
+        [8, 1],
+        [9, 1],
+      ]),
+    );
+    expect(makeCountMap(diff.removed)).toEqual(new Map([]));
   });
 });
 
