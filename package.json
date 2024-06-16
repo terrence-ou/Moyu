@@ -3,18 +3,11 @@
   "version": "0.0.1",
   "private": "true",
   "description": "A concise frontend framework, for learning purpose only",
-  "workspaces": [
-    "packages/runtime"
-  ],
+  "workspaces": ["packages/runtime"],
   "scripts": {
     "serve:examples": "npx http-server . -o ./examples/ -bg"
   },
-  "keywords": [
-    "js",
-    "javascript",
-    "frontend",
-    "framework"
-  ],
+  "keywords": ["js", "javascript", "frontend", "framework"],
   "author": "Tingsong Ou",
   "license": "MIT"
 }
