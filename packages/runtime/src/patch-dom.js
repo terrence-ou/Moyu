@@ -12,6 +12,7 @@ import { objectsDiff } from "./utils/objects";
 import { arraysDiff, arraysDiffSequence, ARRAY_DIFF_OP } from "./utils/arrays";
 import { isNotBlankOrEmptyString } from "./utils/strings";
 import { DOM_TYPES, extractChildren } from "./h";
+import { extractPropsAndEvents } from "./utils/props";
 
 export function patchDOM(oldVdom, newVdom, parentEl, hostComponent = null) {
   if (!areNodesEqual(oldVdom, newVdom)) {
@@ -30,6 +31,10 @@ export function patchDOM(oldVdom, newVdom, parentEl, hostComponent = null) {
     }
     case DOM_TYPES.ELEMENT: {
       patchElement(oldVdom, newVdom, hostComponent);
+      break;
+    }
+    case DOM_TYPES.COMPONENT: {
+      patchComponent(oldVdom, newVdom);
       break;
     }
   }
@@ -79,6 +84,15 @@ function patchElement(oldVdom, newVdom, hostComponent) {
     newEvents,
     hostComponent,
   );
+}
+
+function patchComponent(oldVdom, newVdom) {
+  const component = oldVdom.component;
+  // const { props } = newVdom;
+  const props = extractPropsAndEvents(newVdom);
+  component.updateProps(props);
+  newVdom.component = component;
+  newVdom.el = component.firstElement;
 }
 
 function patchAttrs(el, oldAttrs, newAttrs) {

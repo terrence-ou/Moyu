@@ -1,4 +1,6 @@
+import equal from "fast-deep-equal";
 import { destroyDOM } from "./destroy-dom";
+import { Dispatcher } from "./dispatcher";
 import { DOM_TYPES, extractChildren } from "./h";
 import { mountDOM } from "./mount-dom";
 import { patchDOM } from "./patch-dom";
@@ -9,16 +11,28 @@ export function defineComponent({ render, state, ...methods }) {
     #isMounted = false;
     #vdom = null;
     #hostEl = null;
+    #eventHandlers = null;
+    #parentComponent = null;
+    #dispatcher = new Dispatcher();
+    #subscriptions = [];
 
-    constructor(props = {}) {
+    constructor(props = {}, eventHandlers = {}, parentComponent = null) {
       this.props = props;
       this.state = state ? state(props) : {};
+      this.#eventHandlers = eventHandlers;
+      this.#parentComponent = parentComponent;
     }
 
     get elements() {
       if (this.#vdom === null || this.#vdom === undefined) return [];
       if (this.#vdom.type === DOM_TYPES.FRAGMENT) {
-        return extractChildren(this.#vdom).map((child) => child.el);
+        // return extractChildren(this.#vdom).map((child) => child.el);
+        return extractChildren(this.#vdom).flatMap((child) => {
+          if (child.type === DOM_TYPES.COMPONENT) {
+            return child.component.elements;
+          }
+          return [child.el];
+        });
       }
       return this.#vdom.el;
     }
@@ -34,9 +48,20 @@ export function defineComponent({ render, state, ...methods }) {
       return 0;
     }
 
+    updateProps(props) {
+      const newProps = { ...this.props, ...props };
+      if (equal(props, newProps)) return;
+      this.props = newProps;
+      this.#patch();
+    }
+
     updateState(state) {
       this.state = { ...this.state, ...state };
       this.#patch();
+    }
+
+    emit(eventName, payload) {
+      this.#dispatcher.dispatch(eventName, payload);
     }
 
     render() {
@@ -49,8 +74,9 @@ export function defineComponent({ render, state, ...methods }) {
       }
       this.#vdom = this.render();
       mountDOM(this.#vdom, hostEl, index, this);
-      this.#hostEl = hostEl;
+      this.#wireEventHandlers();
       this.#isMounted = true;
+      this.#hostEl = hostEl;
     }
 
     unmount() {
@@ -58,6 +84,8 @@ export function defineComponent({ render, state, ...methods }) {
         throw new Error("Component is not mounted");
       }
       destroyDOM(this.#vdom);
+      this.#subscriptions.forEach((unsubscribe) => unsubscribe());
+      this.#subscriptions = [];
       this.#vdom = null;
       this.#hostEl = null;
       this.#isMounted = false;
@@ -69,6 +97,19 @@ export function defineComponent({ render, state, ...methods }) {
       }
       const vdom = this.render();
       this.#vdom = patchDOM(this.#vdom, vdom, this.#hostEl, this);
+    }
+
+    #wireEventHandlers() {
+      this.#subscriptions = Object.entries(this.#eventHandlers).map(
+        ([eventName, handler]) => this.#wireEventHandler(eventName, handler),
+      );
+    }
+
+    #wireEventHandler(eventName, handler) {
+      return this.#dispatcher.subscribe(eventName, (payload) => {
+        if (this.#parentComponent) handler.call(this.#parentComponent, payload);
+        else handler(payload);
+      });
     }
   }
 

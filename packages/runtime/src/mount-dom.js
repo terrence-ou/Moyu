@@ -1,6 +1,7 @@
 import { DOM_TYPES } from "./h";
 import { addEventListeners } from "./events";
 import { setAttributes } from "./attributes";
+import { extractPropsAndEvents } from "./utils/props";
 
 /**
  * Mounte the virtual DOM to the real DOM.
@@ -20,6 +21,10 @@ export function mountDOM(vdom, parentEl, index, hostComponent = null) {
     }
     case DOM_TYPES.FRAGMENT: {
       createFragmentNode(vdom, parentEl, index, hostComponent);
+      break;
+    }
+    case DOM_TYPES.COMPONENT: {
+      createComponentNode(vdom, parentEl, index, hostComponent);
       break;
     }
     default: {
@@ -55,7 +60,6 @@ function createTextNode(vdom, parentEl, index) {
   const { value } = vdom;
   const textNode = document.createTextNode(value); // Create a text node with document API
   vdom.el = textNode; // This is a reference to the real DOM
-  // parentEl.append(textNode);
   insert(textNode, parentEl, index);
 }
 
@@ -75,6 +79,15 @@ function createElementNode(vdom, parentEl, index, hostComponent) {
 
   children.forEach((child) => mountDOM(child, element, null, hostComponent));
   insert(element, parentEl, index);
+}
+
+function createComponentNode(vdom, parentEl, index, hostComponent) {
+  const Component = vdom.tag;
+  const { props, events } = extractPropsAndEvents(vdom);
+  const component = new Component(props, events, hostComponent);
+  component.mount(parentEl, index);
+  vdom.component = component;
+  vdom.el = component.firstElement;
 }
 
 function addProps(el, props, vdom, hostComponent) {
