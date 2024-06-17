@@ -6,9 +6,10 @@
 
 A mininal JavaScript frontend UI framework, build for fun. Still in process...
 
-A very BETA release: https://www.npmjs.com/package/@ou-terrence/moyu <br/>
+A very BETA release: https://www.npmjs.com/package/@moyujs/moyu <br/>
 
 Installation:
+
 ```
 npm i @moyujs/moyu
 ```
@@ -24,19 +25,22 @@ Objectives:
   - [ ] Testings
 
 - [ ] State Management
+
   - [x] Dispatcher [dispatcher.js](./packages/runtime/src/dispatcher.js)
   - [x] CreateApp function
   - [ ] Documentations
   - [ ] Testings
 
 - [ ] Reconciliation
+
   - [x] Array difference detection and modification sequence generation [arrays.js](./packages/runtime/src/utils/arrays.js)
   - [x] Object difference detection [objects.js](./packages/runtime/src/utils/objects.js)
   - [x] DOM patching [patch-dom.js](./packages/runtime/src/patch-dom.js)
   - [ ] Documentation
-  - [x] Testing [__tests__](./packages/runtime/src/__tests__/)
+  - [x] Testing [**tests**](./packages/runtime/src/__tests__/)
 
 - [ ] Stateful Component
+
   - [ ] Components definition [component.js](./packages/runtime/src/component.js)
 
 - [ ] Examples
