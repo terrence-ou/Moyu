@@ -26,7 +26,6 @@ export function defineComponent({ render, state, ...methods }) {
     get elements() {
       if (this.#vdom === null || this.#vdom === undefined) return [];
       if (this.#vdom.type === DOM_TYPES.FRAGMENT) {
-        // return extractChildren(this.#vdom).map((child) => child.el);
         return extractChildren(this.#vdom).flatMap((child) => {
           if (child.type === DOM_TYPES.COMPONENT) {
             return child.component.elements;
@@ -34,7 +33,7 @@ export function defineComponent({ render, state, ...methods }) {
           return [child.el];
         });
       }
-      return this.#vdom.el;
+      return [this.#vdom.el];
     }
 
     get firstElement() {
