@@ -67,7 +67,7 @@ function createFragmentNode(vdom, parentEl, index, hostComponent) {
   const { children } = vdom;
   vdom.el = parentEl; // This is a reference to the parent, be careful when handling it
   children.forEach((child, i) =>
-    mountDOM(child, parentEl, index ? index + i : null, hostComponent),
+    mountDOM(child, parentEl, index == null ? null : index + i, hostComponent),
   );
 }
 
