@@ -101,6 +101,28 @@ describe("Testing getter - elements", () => {
   });
 });
 
+describe("Tesing offset getter", () => {
+  it("insert fragment to the current dom", () => {
+    document.body.innerHTML = "<h1>Offset</h1><h2>Offset</h2>";
+    const comp = new FragmentComponent();
+    comp.mount(document.body);
+    expect(comp.offset).toBe(2);
+  });
+
+  it("put the fragment in the at the beginning", () => {
+    document.body.innerHTML = "<h1>Offset</h1><h2>Offset</h2>";
+    const comp = new FragmentComponent();
+    comp.mount(document.body, 0);
+    expect(comp.offset).toBe(0);
+  });
+
+  it("get offset of element node", () => {
+    const comp = new PlaceHolderComponent();
+    comp.mount(document.body);
+    expect(comp.offset).toBe(0);
+  });
+});
+
 const PlaceHolderComponent = defineComponent({
   render() {
     return h("p", {}, ["A place holder component"]);
